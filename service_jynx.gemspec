@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["israbirding@gmail.com"]
   spec.summary       = %q{Use errors count over sliding windows to block calls to an external service or method, or whatever.}
   spec.description   = %q{Use errors count over sliding windows to block calls to an external service or method, or whatever.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/AvnerCohen/service-jynx"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
