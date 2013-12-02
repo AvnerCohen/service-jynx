@@ -14,14 +14,14 @@ The code is MRI depended and is not thread safe, is is also designed specificall
 ````ruby
 
   if ServiceJynx.alive?(:amazon_s3_service)
-   begin
-	   HttpParty.get "s3://bucke:username@password/whatever.jpg"
-   rescue ResponseError => e
-    ServiceJynx.failure!(:amazon_s3_service)
-   end
-	else
-	  "S3 is currently unreachable"
-	end
+     begin
+       HttpParty.get "s3://bucke:username@password/whatever.jpg"
+     rescue ResponseError => e
+      ServiceJynx.failure!(:amazon_s3_service)
+     end
+  else
+    "S3 is currently unreachable"
+  end
 
 ````
 
