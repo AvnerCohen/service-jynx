@@ -28,9 +28,13 @@ The code is MRI depended and is not thread safe, is is also designed specificall
 ## Defaults
 
 Defined when registering a service:
+
 ***time_window_in_seconds***: **10**
+
 ***max_errors***: **40**
+
 ***grace_period***: **360**
+
 
 Defaults means that *40 errors* during *10 seconds*	would turn the service automatically off, for 5 minutes.
 
@@ -43,7 +47,6 @@ ServiceJynx.alive?(:name)
 ServiceJynx.failure!(:name)
 ServiceJynx.down!(:name)
 ServiceJynx.up!(:name)
-ServiceJynx.last_error_count(:name)
 
 ````
 
