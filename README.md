@@ -1,4 +1,5 @@
 # Service-Jynx
+[![Build Status](https://secure.travis-ci.org/AvnerCohen/service-jynx.png)](http://travis-ci.org/AvnerCohen/service-jynx)
 
 Eurasian Wryneck - ***Jynx torquilla***
 
