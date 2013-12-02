@@ -1,4 +1,5 @@
 require "service_jynx/version"
+require "logger_jynx"
 
 module ServiceJynx
 

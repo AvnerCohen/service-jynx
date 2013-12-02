@@ -7,21 +7,27 @@ Eurasian Wryneck - ***Jynx torquilla***
 
 **Jinx** - ***A condition or period of bad luck that appears to have been caused by a specific person or thing.***
 
-A simple (yet powerfull) solution, to allow a Ruby application to manage automatic failover and block calls to an external service and return a stubbed data when service is reported as down.
+A simple solution, to allow a Ruby application to manage automatic failover and block calls to an external service and return a stubbed data when service is reported as down.
 
-The code is MRI depended and is not thread safe, is is also designed specifically to run on a single VM and manage in memory hashes of data, though it can very well be executed with an external shared persistance counters such as, say, Redis.
+The code is MRI depended and is not thread safe(!), is is also designed specifically to run on a single VM and manage in memory hashes of data, though it can very well be executed with an external shared persistance counters such as, say, Redis.
 
 
 ````ruby
 
-  if ServiceJynx.alive?(:amazon_s3_service)
-     begin
-       HttpParty.get "s3://bucke:username@password/whatever.jpg"
-     rescue ResponseError => e
-      ServiceJynx.failure!(:amazon_s3_service)
-     end
-  else
-    "S3 is currently unreachable"
+  def index
+    begin
+      response = {country: "Israel"}
+      if ServiceJynx.alive?("inbox")
+        response = {country: HTTParty.get("https://api.github.com/users/AvnerCohen", :timeout => 20)["location"]}
+      else
+        response.merge!({error: "service down ! #{__method__}"})
+      end
+    rescue Exception => e 
+      ServiceJynx.failure!("inbox")
+      response.merge!({error: "exception occured, #{__method__}"})
+    ensure
+      render json: response and return
+    end
   end
 
 ````
