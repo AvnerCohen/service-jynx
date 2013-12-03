@@ -32,6 +32,48 @@ The code is MRI depended and is not thread safe(!), is is also designed specific
 
 ````
 
+
+## Complete Use case extracted
+
+[1] Register the service for Jynx monitoring at application start time:
+
+````
+  opts = {
+    time_window_in_seconds: 20,
+    max_errors: 10,
+    grace_period: 60
+  }
+  ServiceJynx.register!("github_api", opts)
+````
+
+[2] Define a module that wraps your HTTP calls to have a generic safe api
+
+````
+module HttpInternalWrapper
+  extend self
+    def get_api(service_name, url, &block)
+      if ServiceJynx.alive?(service_name)
+            HTTParty.get(url, :timeout => 20)
+      else
+        block.call("#{service_name}_service set as down.")
+      end
+    rescue Exception => e
+      ServiceJynx.failure!(service_name)
+      block.call("Exception in #{service_name}_service exceution - #{e.message}")
+    end
+end
+````
+
+[3] Execute with a stubbed block that gets executed on failure or service down
+
+````
+HttpInternalWrapper.get_api("github_api", "https://api.github.com/users/AvnerCohen") do |msg|
+  @logger.error "#{msg} -- #{path} failed at #{__method__} !!"
+  {error: "Github api is currently unavailable"} # stub an empty hash with error messages
+end
+````
+
+
 ## Defaults
 
 Defined when registering a service:
