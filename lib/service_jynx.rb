@@ -33,7 +33,12 @@ module ServiceJynx
     now = Time.now.to_i
     jynx.errors << now
     jynx.clean_aged(now)
-    down!(name, "Max error count (#{jynx.max_errors}) reached at #{Time.now}.") if jynx.errors.count > jynx.max_errors
+    if jynx.errors.count > jynx.max_errors
+      down!(name, "Max error count (#{jynx.max_errors}) reached at #{Time.now}.")
+      :WENT_DOWN
+    else
+      :FAIL_MARKED
+    end
   end
 
 

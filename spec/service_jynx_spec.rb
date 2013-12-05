@@ -88,6 +88,20 @@ describe ServiceJynx do
     ServiceJynx.alive?(:dummy_service).should eq(false)
   end 
 
+  it "should report result for failure" do
+    ServiceJynx.register!(:dummy_service, {time_window_in_seconds: 2, max_errors: 3})
+    jynx = ServiceJynx.counters.fetch(:dummy_service)
+    ServiceJynx.alive?(:dummy_service).should eq(true)
+    ServiceJynx.failure!(:dummy_service).should eq(:FAIL_MARKED)
+    ServiceJynx.failure!(:dummy_service).should eq(:FAIL_MARKED)
+    ServiceJynx.failure!(:dummy_service).should eq(:FAIL_MARKED)
+    
+    ## After 3 errors, report as down
+    ServiceJynx.failure!(:dummy_service).should eq(:WENT_DOWN)
+    ServiceJynx.alive?(:dummy_service).should eq(false)
+  end  
+
+
   it "should auto disable when errors limit reached old errors and restart again when grace period passes" do
     ServiceJynx.register!(:dummy_service, {time_window_in_seconds: 2, max_errors: 20, grace_period: 5})
     jynx = ServiceJynx.counters.fetch(:dummy_service)
